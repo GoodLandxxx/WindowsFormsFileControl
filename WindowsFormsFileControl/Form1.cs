@@ -48,11 +48,14 @@ namespace WindowsFormsFileControl
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 foldPath = dialog.SelectedPath;//文件夹路径
-
             }
-
             this.textBox1.Text = foldPath;
             this.textBox1.Enabled = false;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

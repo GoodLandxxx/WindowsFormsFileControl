@@ -8,15 +8,21 @@ namespace WindowsFormsFileControl
 {
     static class FileHandle
     {
-        static List<fileeee> fileeeeList = new List<fileeee> { };
-        static string fileState = null;
-        static public List<fileeee> ReadAllText(string path)
+
+        private static List<File_class> fileList = new List<File_class> { };
+        private static List<FileInfo> FileInfos =   new List<FileInfo> { };
+        private static string fileState = null;
+        private static FileInfo[] arrFile = null;
+
+
+
+        static public List<FileInfo> ReadAllText(string path)
         {
             string presentFolder = null;
 
             DirectoryInfo folder = new DirectoryInfo(path);
-
-
+            DirectoryInfo[] directoyinfos = folder.GetDirectories();
+            
             if (folder.Exists)
             {
                 //FileInfo[] fileinfos = folder.GetFiles();
@@ -26,67 +32,143 @@ namespace WindowsFormsFileControl
                 //}
                 //else
                 //    {
-                if (folder.GetDirectories().Length != 0)
-                {
-                    foreach (DirectoryInfo DirectoryInfo in folder.GetDirectories())
-                    {
-                        presentFolder = DirectoryInfo.FullName;
-                        ReadAllText(presentFolder);
-                    }
-                }
                 if (folder.GetFiles().Length != 0)
                 {
-                    foreach (FileInfo fileinfo in folder.GetFiles())
-                        fileeeeList.Add(fileHandle(fileinfo));
+                    foreach (FileInfo fileinfo in folder.GetFiles() )
+                        FileInfos.Add(fileinfo);
                 }
                 else
                 {
                     fileState = "文件不存在";
                 }
-            }
-            return fileeeeList;
-        }
-        
-       
-       
+                if (directoyinfos.Length != 0)
+                {
+                    foreach (DirectoryInfo DirectoryInfo in directoyinfos)
+                    {
+                        presentFolder = DirectoryInfo.FullName;
+                        ReadAllText(presentFolder);
+                    }
+                }
 
-     
-        
-        static public fileeee fileHandle(FileInfo fileInfo)
+            }
+            return FileInfos;
+        }
+        static public List<File_class> ReadAllText(List<FileInfo> FileInfos)
         {
-            bool type = true;
-            string fileName = null;
-            fileeee fileeee = new fileeee();
+            listToArray(FileInfos);
+            SortAsFileName(ref arrFile);
+            arrayToList(arrFile);
+            foreach (FileInfo fileinfo in FileInfos)
+            {
+                fileList.Add(fileHandle(fileinfo));
+            }
+            return fileList;
+        }
+        static public int AddFile(File_class files)
+        {
+            string sql = string.Format("insert into fileinfo_table values('{0}','{1}','{2}','{3}')",
+                files.fileName,
+                files.fileType,
+                files.filePath,
+                files.fileSize);
+            int result = DB_file.ExeuteNonQuery(sql);
+            return result;
+        }
+        static public void clearObject()
+        {
+            fileList = null;
+            fileList = new List<File_class> { };
+        }
+        static public void listToArray(List<FileInfo> fileinfos)
+        {
+            arrFile = new FileInfo[fileinfos.Count] ;
+            for(int i =0;i<fileinfos.Count;i++)
+            {
+                arrFile[i] = fileinfos[i];
+            }
+        }
+        static public void arrayToList(FileInfo[] arrfi)
+        {
+            FileInfos.Clear();
+            for (int i = 0; i < arrfi.Length; i++)
+            {
+               FileInfos.Add(arrfi[i]);
+            }
+        }
+
+
+        static private void SortAsFileName(ref FileInfo[] arrFi)
+        {
+            Array.Sort(arrFi, delegate (FileInfo x, FileInfo y) { return x.Name.CompareTo(y.Name); });
+        }
+        static private void SortAsFileSize(ref FileInfo[] arrFi)
+        {
+            Array.Sort(arrFi, delegate (FileInfo x, FileInfo y) { return x.Length.CompareTo(y.Length); });
+        }
+
+
+        static private List<FileInfo> SortAsFileName(string filePath)
+        {
+            List<FileInfo> fileSortList = new List<FileInfo> { };
+            DirectoryInfo di = new DirectoryInfo(filePath);
+
+            FileInfo[] arrFi = di.GetFiles("*.*");
+            SortAsFileName(ref arrFi);
+
+            for (int i = 0; i < arrFi.Length; i++)
+                fileSortList.Add(arrFi[i]) ;   
+            return fileSortList;
+        }
+        static private List<FileInfo> SortAsFileSize(string filePath)
+        {
+            List<FileInfo> fileSortList = new List<FileInfo> { };
+            DirectoryInfo di = new DirectoryInfo(filePath);
+
+            FileInfo[] arrFi = di.GetFiles("*.*");
+            SortAsFileSize(ref arrFi);
+
+            for (int i = 0; i < arrFi.Length; i++)
+                fileSortList.Add(arrFi[i]);
+            return fileSortList;
+        }
+
+        static public File_class fileHandle(FileInfo fileInfo)
+        {
+            //bool type = true;
+            //string fileName = null;
+            File_class fileeee = new File_class();
             fileeee.fileName = fileInfo.Name;
             fileeee.fileSize = countFileSize(fileInfo);
             fileeee.filePath = fileInfo.DirectoryName;
-            fileeee.fileType = fileInfo.Extension;//原来这里使用是自己写的函数
+            if(!fileInfo.Extension.Equals(""))
+            { 
+            fileeee.fileType = fileInfo.Extension.Substring(1, fileInfo.Extension.Length-1 );//原来这里使用是自己写的函数
+            }
             return fileeee;
         }
         static public string countFileSize(FileInfo fileInfo)
         {
 
 
-            string size = null;
+            //string size = null;
             long sizeInt = fileInfo.Length;
             double kbit = 1024.0;
             double mbit = 1024 * 1024.0;
             double gbit = 1024 * 1024 * 1024.0;
             if (sizeInt > kbit && sizeInt / kbit < 1024)
             {
-
-                return String.Format("{0:f1}", sizeInt / kbit) + " KB;";
+                return String.Format("{0:f1}", sizeInt / kbit) + "  KB";
             }
             else if (sizeInt > mbit && sizeInt / mbit < 1024)
             {
-                return String.Format("{0:f1}", sizeInt / mbit) + "MB";
+                return String.Format("{0:f1}", sizeInt / mbit) + "  MB";
 
             }
             else if (sizeInt > 1024 * 1024 * 1024)
             {
-                return string.Format("{0:f2}", sizeInt / gbit) + "GB";
+                return string.Format("{0:f2}", sizeInt / gbit) + "  GB";
             }
-            return Convert.ToString(sizeInt);
+            return Convert.ToString(sizeInt + "  字节");
 
         }
         /// <summary>
@@ -223,5 +305,19 @@ namespace WindowsFormsFileControl
             }
             return newFileName;
         }
+        static public List<File_class> sortFile(List<File_class> unSorted, string sortOfName)
+        {
+            List<File_class> sortFile = new List<File_class> { };
+            switch (sortOfName)
+            {
+                case "name":
+                    
+                    break;
+            }
+            return sortFile;
+        }
+
     }
 }
+
+
