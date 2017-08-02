@@ -11,7 +11,7 @@ namespace WindowsFormsFileControl
     {
 
         private static List<File_class> fileList = new List<File_class> { };
-        private static List<FileInfo> FileInfos =   new List<FileInfo> { };
+        private static List<FileInfo> FileInfos = new List<FileInfo> { };
         private static string fileState = null;
         private static FileInfo[] arrFile = null;
 
@@ -19,7 +19,7 @@ namespace WindowsFormsFileControl
 
         static public List<FileInfo> ReadAllText(string path)
         {
-            
+
             string presentFolder = null;
 
             DirectoryInfo folder = new DirectoryInfo(path);
@@ -27,57 +27,52 @@ namespace WindowsFormsFileControl
             try
             {
                 if (folder.Exists)
-            {
-                //FileInfo[] fileinfos = folder.GetFiles();
-                //if (fileinfos.Length == 0)
-                //{
-                //    fileState = "该文件为空";
-                //}
-                //else
-                //    {
-                if (folder.GetFiles().Length != 0)
                 {
-                    foreach (FileInfo fileinfo in folder.GetFiles() )
-                        FileInfos.Add(fileinfo);
-                }
-                else
-                {
-                    fileState = "文件不存在";
-                }
-                if (directoyinfos.Length != 0)
-                {
-                    foreach (DirectoryInfo DirectoryInfo in directoyinfos)
-                    {
-                        presentFolder = DirectoryInfo.FullName;
-                        ReadAllText(presentFolder);
-                    }
-                }
 
+                    if (folder.GetFiles().Length != 0)
+                    {
+                        foreach (FileInfo fileinfo in folder.GetFiles())
+                            FileInfos.Add(fileinfo);
+                    }
+                    else
+                    {
+                        fileState = "文件不存在";
+                    }
+                    if (directoyinfos.Length != 0)
+                    {
+                        foreach (DirectoryInfo DirectoryInfo in directoyinfos)
+                        {
+                            presentFolder = DirectoryInfo.FullName;
+                            ReadAllText(presentFolder);
+                        }
+                    }
+
+                }
+                return FileInfos;
             }
-            return FileInfos;
-            }
-            catch(Exception e)
+            catch (Exception e)
             {
-                Console.WriteLine("ReadAllText(string path)"+e);
+                Console.WriteLine("ReadAllText(string path)" + e);
 
             }
             return FileInfos;
         }
         static public List<File_class> ReadAllText(List<FileInfo> FileInfos)
         {
-            try { 
-            listToArray(FileInfos);
-            SortAsFileName(ref arrFile);
-            arrayToList(arrFile);
-            foreach (FileInfo fileinfo in FileInfos)
+            try
             {
-                fileList.Add(fileHandle(fileinfo));
-            }
-            return fileList;
+                listToArray(FileInfos);
+                SortAsFileName(ref arrFile);
+                arrayToList(arrFile);
+                foreach (FileInfo fileinfo in FileInfos)
+                {
+                    fileList.Add(fileHandle(fileinfo));
+                }
+                return fileList;
             }
             finally
             {
-                ReFresh();  
+                ReFresh();
             }
         }
 
@@ -108,8 +103,8 @@ namespace WindowsFormsFileControl
         }
         static public void listToArray(List<FileInfo> fileinfos)
         {
-            arrFile = new FileInfo[fileinfos.Count] ;
-            for(int i =0;i<fileinfos.Count;i++)
+            arrFile = new FileInfo[fileinfos.Count];
+            for (int i = 0; i < fileinfos.Count; i++)
             {
                 arrFile[i] = fileinfos[i];
             }
@@ -119,7 +114,7 @@ namespace WindowsFormsFileControl
             FileInfos.Clear();
             for (int i = 0; i < arrfi.Length; i++)
             {
-               FileInfos.Add(arrfi[i]);
+                FileInfos.Add(arrfi[i]);
             }
         }
 
@@ -143,7 +138,7 @@ namespace WindowsFormsFileControl
             SortAsFileName(ref arrFi);
 
             for (int i = 0; i < arrFi.Length; i++)
-                fileSortList.Add(arrFi[i]) ;   
+                fileSortList.Add(arrFi[i]);
             return fileSortList;
         }
         static private List<FileInfo> SortAsFileSize(string filePath)
@@ -170,10 +165,10 @@ namespace WindowsFormsFileControl
             file_Class.filePath = fileInfo.DirectoryName;
             file_Class.fileCreateDate = fileInfo.CreationTime;
             file_Class.fileLastAccessTime = fileInfo.LastAccessTime;
-            file_Class.fileLastWriteTime=fileInfo.LastWriteTime;
-            if(!fileInfo.Extension.Equals(""))
+            file_Class.fileLastWriteTime = fileInfo.LastWriteTime;
+            if (!fileInfo.Extension.Equals(""))
             {
-                file_Class.fileType = fileInfo.Extension.Substring(1, fileInfo.Extension.Length-1 );//原来这里使用是自己写的函数
+                file_Class.fileType = fileInfo.Extension.Substring(1, fileInfo.Extension.Length - 1);//原来这里使用是自己写的函数
             }
             return file_Class;
         }
@@ -323,7 +318,7 @@ namespace WindowsFormsFileControl
         }
         static private string endTypeName(string fileName)
         {
-            
+
             string filetype = null;
             int i = 1;
             while (true)
@@ -345,7 +340,7 @@ namespace WindowsFormsFileControl
             //        newFileName = fileName.Substring(fileName.Length - 2, 2);
             //    }
             //}
-            
+
         }
         static public List<File_class> sortFile(List<File_class> unSorted, string sortOfName)
         {
@@ -353,7 +348,7 @@ namespace WindowsFormsFileControl
             switch (sortOfName)
             {
                 case "name":
-                    
+
                     break;
             }
             return sortFile;
@@ -361,7 +356,7 @@ namespace WindowsFormsFileControl
 
 
 
-        static public DataTable CreateDataTable(string tableName ,List<File_class> File_class)
+        static public DataTable CreateDataTable(string tableName, List<File_class> File_class)
         {
             DataTable dt = new DataTable(tableName);
             dt.Columns.Add("filename", typeof(String));
@@ -372,12 +367,12 @@ namespace WindowsFormsFileControl
             dt.Columns.Add("fileCreateDate", typeof(DateTime));
             dt.Columns.Add("fileLastWriteTime", typeof(DateTime));
             dt.Columns.Add("fileLastAccessTime", typeof(DateTime));
-            foreach(File_class fc in File_class)
+            foreach (File_class fc in File_class)
             {
                 dt.Rows.Add(
                     fc.fileName,
                     fc.fileType,
-                    fc.filePath, 
+                    fc.filePath,
                     fc.fileSize,
                     fc.handlefileSize,
                     fc.fileCreateDate,

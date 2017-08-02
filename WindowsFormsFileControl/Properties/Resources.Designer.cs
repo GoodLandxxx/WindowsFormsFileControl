@@ -61,6 +61,51 @@ namespace WindowsFormsFileControl.Properties {
         }
         
         /// <summary>
+        ///   查找类似 USE [master]
+        ///
+        ////****** Object:  Database [{0}]    Script Date: 2017-08-02 20:06:03 ******/
+        ///CREATE DATABASE [{0}]
+        /// CONTAINMENT = NONE
+        /// ON  PRIMARY 
+        ///( NAME = N&apos;{0}&apos;, FILENAME = N&apos;C:\Program Files\Microsoft SQL Server\MSSQL12.SQLSERVER\MSSQL\DATA\{0}.mdf&apos; , SIZE = 12288KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB )
+        /// LOG ON 
+        ///( NAME = N&apos;{0}_log&apos;, FILENAME = N&apos;C:\Program Files\Microsoft SQL Server\MSSQL12.SQLSERVER\MSSQL\DATA\{0}_log.ldf&apos; , SIZE = 47616KB , MAXSIZE = 2048GB , FILEGROWTH = 10%)
+        /// 的本地化字符串。
+        /// </summary>
+        internal static string CrateDataSql {
+            get {
+                return ResourceManager.GetString("CrateDataSql", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 USE [{1}]
+        ///
+        ////****** Object:  Table [dbo].[{0}]    Script Date: 2017-08-01 22:56:08 ******/
+        ///SET ANSI_NULLS ON
+        ///
+        ///SET QUOTED_IDENTIFIER ON
+        ///
+        ///SET ANSI_PADDING ON
+        ///
+        ///CREATE TABLE [dbo].[{0}](
+        ///	[id] [int] IDENTITY(1,1) NOT NULL,
+        ///	[filename] [varchar](100) NOT NULL,
+        ///	[filetype] [varchar](20) NULL,
+        ///	[filepath] [varchar](500) NOT NULL,
+        ///	[fileSize] [bigint] NOT NULL,
+        ///	[handlefileSize] [varchar](50) NOT NULL,
+        ///	[fileCreateDate] [datetime] NOT NULL,
+        ///	[fileLastWriteTime] [datetime] NOT NULL,
+        ///	[fileLastAccess [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        /// </summary>
+        internal static string CreateTableSql {
+            get {
+                return ResourceManager.GetString("CreateTableSql", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
         internal static System.Drawing.Bitmap ic_close_black_18dp_1x {

@@ -7,6 +7,8 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Data.OleDb;
 using System.Data;
+using System.IO;
+using WindowsFormsFileControl.Properties;
 
 namespace WindowsFormsFileControl
 {
@@ -16,6 +18,19 @@ namespace WindowsFormsFileControl
             private static string connectionString = @"server=MICHAEL-JORDAN\SQLSERVER;database=FileSystem;uid=sa;pwd=19690401" ;
       
 
+        public static string CrateDataSystem(string dateSystemName)
+        {
+            //string s = Resources.CreateTableSql;
+            string dataCreateDataSql = String.Format(@Resources.CrateDataSql.ToString()
+          , dateSystemName);
+            return dataCreateDataSql;
+        }
+        public static string CreateTable(string dataName,string tableName)
+        {
+            string dataCreateTableSql = String.Format(@Resources.CreateTableSql.ToString()
+          , tableName, dataName); 
+            return dataCreateTableSql;
+        }
         public static SqlConnection GetConnection()
             {
                 return new SqlConnection(connectionString);
@@ -27,6 +42,7 @@ namespace WindowsFormsFileControl
             try
             {
                 conn.Open();
+                Console.WriteLine("succeed");
                 return comm.ExecuteNonQuery();
             }
             catch (Exception ex)
