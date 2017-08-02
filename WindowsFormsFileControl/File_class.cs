@@ -10,7 +10,8 @@ namespace WindowsFormsFileControl
     {
         public string fileName { get; set; }
         public string fileType { get; set; }
-        public string fileSize { get; set; }
+        public long fileSize { get; set; }
+        public string handlefileSize { get; set; }
         public string filePath { get; set; }
         public DateTime fileCreateDate { get; set; }//创建时间
         public DateTime fileLastWriteTime { get; set; }//获取或设置上次访问当前文件或目录的时间。

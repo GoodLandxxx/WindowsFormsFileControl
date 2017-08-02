@@ -1,4 +1,6 @@
-﻿using WindowsFormsFileControl.Properties;
+﻿using System;
+using System.Drawing;
+using WindowsFormsFileControl.Properties;
 
 namespace WindowsFormsFileControl
 {
@@ -32,34 +34,39 @@ namespace WindowsFormsFileControl
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.button2 = new System.Windows.Forms.Button();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.button_search = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.changeFilePath = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.search = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.File_classBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.delete = new System.Windows.Forms.DataGridViewImageColumn();
             this.fileNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.fileTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.fileSizeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.filePathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.File_classBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.changeFilePath = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.button1 = new System.Windows.Forms.Button();
+            this.path_label = new System.Windows.Forms.Label();
+            this.search_textBox = new System.Windows.Forms.TextBox();
+            this.search = new System.Windows.Forms.Label();
+            this.ltems_label = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.File_classBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
-            // button2
+            // button_search
             // 
-            this.button2.Location = new System.Drawing.Point(877, 361);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(100, 38);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "查询";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button_search.Location = new System.Drawing.Point(877, 361);
+            this.button_search.Name = "button_search";
+            this.button_search.Size = new System.Drawing.Size(100, 38);
+            this.button_search.TabIndex = 2;
+            this.button_search.Text = "查询";
+            this.button_search.UseVisualStyleBackColor = true;
+            this.button_search.Click += new System.EventHandler(this.button_search_Click);
             // 
             // dataGridView1
             // 
@@ -85,52 +92,8 @@ namespace WindowsFormsFileControl
             this.dataGridView1.Size = new System.Drawing.Size(780, 387);
             this.dataGridView1.TabIndex = 3;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick_1);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(877, 12);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 21);
-            this.textBox1.TabIndex = 4;
-            // 
-            // changeFilePath
-            // 
-            this.changeFilePath.Location = new System.Drawing.Point(877, 49);
-            this.changeFilePath.Name = "changeFilePath";
-            this.changeFilePath.Size = new System.Drawing.Size(100, 23);
-            this.changeFilePath.TabIndex = 5;
-            this.changeFilePath.Text = "更换路径";
-            this.changeFilePath.UseVisualStyleBackColor = true;
-            this.changeFilePath.Click += new System.EventHandler(this.changeFilePath_Click);
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(877, 109);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 21);
-            this.textBox2.TabIndex = 6;
-            // 
-            // search
-            // 
-            this.search.AutoSize = true;
-            this.search.Location = new System.Drawing.Point(823, 112);
-            this.search.Name = "search";
-            this.search.Size = new System.Drawing.Size(29, 12);
-            this.search.TabIndex = 7;
-            this.search.Text = "查找";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(823, 15);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 12);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "路径";
-            // 
-            // File_classBindingSource
-            // 
-            this.File_classBindingSource.DataSource = typeof(WindowsFormsFileControl.File_class);
+            this.dataGridView1.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentDoubleClick);
+            this.dataGridView1.RowContextMenuStripNeeded += new System.Windows.Forms.DataGridViewRowContextMenuStripNeededEventHandler(this.dataGridView1_RowContextMenuStripNeeded);
             // 
             // delete
             // 
@@ -144,8 +107,8 @@ namespace WindowsFormsFileControl
             // fileNameDataGridViewTextBoxColumn
             // 
             this.fileNameDataGridViewTextBoxColumn.DataPropertyName = "fileName";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.fileNameDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.fileNameDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
             this.fileNameDataGridViewTextBoxColumn.FillWeight = 96.50538F;
             this.fileNameDataGridViewTextBoxColumn.HeaderText = "文件名";
             this.fileNameDataGridViewTextBoxColumn.MinimumWidth = 20;
@@ -166,7 +129,7 @@ namespace WindowsFormsFileControl
             // 
             // fileSizeDataGridViewTextBoxColumn
             // 
-            this.fileSizeDataGridViewTextBoxColumn.DataPropertyName = "fileSize";
+            this.fileSizeDataGridViewTextBoxColumn.DataPropertyName = "handlefileSize";
             this.fileSizeDataGridViewTextBoxColumn.FillWeight = 14.88252F;
             this.fileSizeDataGridViewTextBoxColumn.HeaderText = "文件大小";
             this.fileSizeDataGridViewTextBoxColumn.MinimumWidth = 20;
@@ -177,8 +140,8 @@ namespace WindowsFormsFileControl
             // filePathDataGridViewTextBoxColumn
             // 
             this.filePathDataGridViewTextBoxColumn.DataPropertyName = "filePath";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.filePathDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.filePathDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle4;
             this.filePathDataGridViewTextBoxColumn.FillWeight = 278.1726F;
             this.filePathDataGridViewTextBoxColumn.HeaderText = "文件路径";
             this.filePathDataGridViewTextBoxColumn.MinimumWidth = 20;
@@ -188,19 +151,110 @@ namespace WindowsFormsFileControl
             this.filePathDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.filePathDataGridViewTextBoxColumn.Width = 500;
             // 
+            // File_classBindingSource
+            // 
+            this.File_classBindingSource.DataSource = typeof(WindowsFormsFileControl.File_class);
+            // 
+            // changeFilePath
+            // 
+            this.changeFilePath.Location = new System.Drawing.Point(704, 403);
+            this.changeFilePath.Name = "changeFilePath";
+            this.changeFilePath.Size = new System.Drawing.Size(100, 23);
+            this.changeFilePath.TabIndex = 5;
+            this.changeFilePath.Text = "更换路径";
+            this.changeFilePath.UseVisualStyleBackColor = true;
+            this.changeFilePath.Click += new System.EventHandler(this.changeFilePath_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(119, 408);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 12);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "当前路径";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(877, 332);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // path_label
+            // 
+            this.path_label.AutoSize = true;
+            this.path_label.Location = new System.Drawing.Point(178, 408);
+            this.path_label.Name = "path_label";
+            this.path_label.Size = new System.Drawing.Size(65, 12);
+            this.path_label.TabIndex = 10;
+            this.path_label.Text = "path_label";
+            // 
+            // search_textBox
+            // 
+            this.search_textBox.Location = new System.Drawing.Point(877, 12);
+            this.search_textBox.Name = "search_textBox";
+            this.search_textBox.Size = new System.Drawing.Size(100, 21);
+            this.search_textBox.TabIndex = 6;
+            // 
+            // search
+            // 
+            this.search.AutoSize = true;
+            this.search.Location = new System.Drawing.Point(830, 15);
+            this.search.Name = "search";
+            this.search.Size = new System.Drawing.Size(29, 12);
+            this.search.TabIndex = 7;
+            this.search.Text = "查找";
+            // 
+            // ltems_label
+            // 
+            this.ltems_label.AutoSize = true;
+            this.ltems_label.Location = new System.Drawing.Point(48, 408);
+            this.ltems_label.Name = "ltems_label";
+            this.ltems_label.Size = new System.Drawing.Size(0, 12);
+            this.ltems_label.TabIndex = 11;
+            this.ltems_label.TextAlign = ContentAlignment.BottomCenter;
+            this.ltems_label.Click += new System.EventHandler(this.ltems_label_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(31, 408);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(17, 12);
+            this.label3.TabIndex = 12;
+            this.label3.Text = "共";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(83, 409);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(17, 12);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "项";
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(999, 426);
+            this.ClientSize = new System.Drawing.Size(999, 435);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.ltems_label);
+            this.Controls.Add(this.path_label);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.search);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.search_textBox);
             this.Controls.Add(this.changeFilePath);
-            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button_search);
             this.Name = "Form2";
             this.Text = "Form2";
             this.Load += new System.EventHandler(this.Form2_Load);
@@ -211,19 +265,25 @@ namespace WindowsFormsFileControl
 
         }
 
+      
         #endregion
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button_search;
         private System.Windows.Forms.BindingSource File_classBindingSource;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button changeFilePath;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Label search;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridViewImageColumn delete;
         private System.Windows.Forms.DataGridViewTextBoxColumn fileNameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn fileTypeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn fileSizeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn filePathDataGridViewTextBoxColumn;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label path_label;
+        private System.Windows.Forms.TextBox search_textBox;
+        private System.Windows.Forms.Label search;
+        private System.Windows.Forms.Label ltems_label;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
     }
 }

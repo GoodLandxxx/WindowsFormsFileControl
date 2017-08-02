@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,12 +19,14 @@ namespace WindowsFormsFileControl
 
         static public List<FileInfo> ReadAllText(string path)
         {
+            
             string presentFolder = null;
 
             DirectoryInfo folder = new DirectoryInfo(path);
             DirectoryInfo[] directoyinfos = folder.GetDirectories();
-            
-            if (folder.Exists)
+            try
+            {
+                if (folder.Exists)
             {
                 //FileInfo[] fileinfos = folder.GetFiles();
                 //if (fileinfos.Length == 0)
@@ -52,9 +55,17 @@ namespace WindowsFormsFileControl
 
             }
             return FileInfos;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("ReadAllText(string path)"+e);
+
+            }
+            return FileInfos;
         }
         static public List<File_class> ReadAllText(List<FileInfo> FileInfos)
         {
+            try { 
             listToArray(FileInfos);
             SortAsFileName(ref arrFile);
             arrayToList(arrFile);
@@ -63,21 +74,37 @@ namespace WindowsFormsFileControl
                 fileList.Add(fileHandle(fileinfo));
             }
             return fileList;
+            }
+            finally
+            {
+                ReFresh();  
+            }
         }
+
         static public int AddFile(File_class files)
         {
-            string sql = string.Format("insert into fileinfo_table values('{0}','{1}','{2}','{3}')",
+            string sql = string.Format("insert into fileInfo values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')",
                 files.fileName,
                 files.fileType,
                 files.filePath,
-                files.fileSize);
+                files.fileSize,
+                files.handlefileSize,
+                files.fileCreateDate,
+                files.fileLastWriteTime,
+                files.fileLastAccessTime);
             int result = DB_file.ExeuteNonQuery(sql);
             return result;
         }
-        static public void clearObject()
+        static public void ReFresh()
         {
             fileList = null;
+            FileInfos = null;
+            arrFile = null;
+            FileInfos = new List<FileInfo> { };
             fileList = new List<File_class> { };
+
+
+
         }
         static public void listToArray(List<FileInfo> fileinfos)
         {
@@ -136,15 +163,19 @@ namespace WindowsFormsFileControl
         {
             //bool type = true;
             //string fileName = null;
-            File_class fileeee = new File_class();
-            fileeee.fileName = fileInfo.Name;
-            fileeee.fileSize = countFileSize(fileInfo);
-            fileeee.filePath = fileInfo.DirectoryName;
+            File_class file_Class = new File_class();
+            file_Class.fileName = fileInfo.Name;
+            file_Class.fileSize = fileInfo.Length;
+            file_Class.handlefileSize = countFileSize(fileInfo);
+            file_Class.filePath = fileInfo.DirectoryName;
+            file_Class.fileCreateDate = fileInfo.CreationTime;
+            file_Class.fileLastAccessTime = fileInfo.LastAccessTime;
+            file_Class.fileLastWriteTime=fileInfo.LastWriteTime;
             if(!fileInfo.Extension.Equals(""))
-            { 
-            fileeee.fileType = fileInfo.Extension.Substring(1, fileInfo.Extension.Length-1 );//原来这里使用是自己写的函数
+            {
+                file_Class.fileType = fileInfo.Extension.Substring(1, fileInfo.Extension.Length-1 );//原来这里使用是自己写的函数
             }
-            return fileeee;
+            return file_Class;
         }
         static public string countFileSize(FileInfo fileInfo)
         {
@@ -292,18 +323,29 @@ namespace WindowsFormsFileControl
         }
         static private string endTypeName(string fileName)
         {
-            string newFileName = null;
-            newFileName = fileName.Substring(fileName.Length - 4, 4);
-
-            if (newFileName[0] == '.')
+            
+            string filetype = null;
+            int i = 1;
+            while (true)
             {
-                newFileName = fileName.Substring(fileName.Length - 3, 3);
-                if (newFileName[0] == '.')
-                {
-                    newFileName = fileName.Substring(fileName.Length - 2, 2);
-                }
+                filetype = fileName.Substring(fileName.Length - i, i);
+                i++;
+                if (filetype[0].Equals('.'))
+                    break;
+
             }
-            return newFileName;
+            return filetype;
+            //newFileName = fileName.Substring(fileName.Length - 4, 4);
+
+            //if (newFileName[0] == '.')
+            //{
+            //    newFileName = fileName.Substring(fileName.Length - 3, 3);
+            //    if (newFileName[0] == '.')
+            //    {
+            //        newFileName = fileName.Substring(fileName.Length - 2, 2);
+            //    }
+            //}
+            
         }
         static public List<File_class> sortFile(List<File_class> unSorted, string sortOfName)
         {
@@ -315,6 +357,34 @@ namespace WindowsFormsFileControl
                     break;
             }
             return sortFile;
+        }
+
+
+
+        static public DataTable CreateDataTable(string tableName ,List<File_class> File_class)
+        {
+            DataTable dt = new DataTable(tableName);
+            dt.Columns.Add("filename", typeof(String));
+            dt.Columns.Add("filetype", typeof(String));
+            dt.Columns.Add("filepath", typeof(String));
+            dt.Columns.Add("fileSize", typeof(long));
+            dt.Columns.Add("handlefileSize", typeof(String));
+            dt.Columns.Add("fileCreateDate", typeof(DateTime));
+            dt.Columns.Add("fileLastWriteTime", typeof(DateTime));
+            dt.Columns.Add("fileLastAccessTime", typeof(DateTime));
+            foreach(File_class fc in File_class)
+            {
+                dt.Rows.Add(
+                    fc.fileName,
+                    fc.fileType,
+                    fc.filePath, 
+                    fc.fileSize,
+                    fc.handlefileSize,
+                    fc.fileCreateDate,
+                    fc.fileLastWriteTime,
+                    fc.fileLastWriteTime);
+            }
+            return dt;
         }
 
     }
